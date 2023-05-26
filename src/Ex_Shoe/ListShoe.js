@@ -7,6 +7,7 @@ export default class ListShoe extends Component {
       return (
         <ItemShoe
           handleView={this.props.viewDetail}
+          handleAddCart={this.props.handleAddToCart}
           key={item.id}
           data={item}
         />
@@ -16,7 +17,7 @@ export default class ListShoe extends Component {
 
   render() {
     return (
-      <div className="row gap-2 justify-content-center">
+      <div className="row col-6 gap-1 justify-content-center">
         {this.renderListShoe()}
       </div>
     );

@@ -17,24 +17,59 @@ export default class Ex_Shoe extends Component {
   };
 
   handleAddToCart = (shoe) => {
-    let cloneCart = [...this.state.cart]; // Tạo data mới
-    cloneCart.push(shoe);
-    this.setState({ cart: cloneCart }); //update cart cũ bằng cart mới
+    // Tạo mảng data mới
+    let cloneCart = [...this.state.cart];
+    let index = cloneCart.findIndex((item) => item.id == shoe.id);
+    if (index == -1) {
+      // cloneCart.push(shoe);
+      // Tạo object shoe mới và thêm key quantity
+      let newShoe = { ...shoe, quantity: 1 };
+      cloneCart.push(newShoe);
+    } else {
+      cloneCart[index].quantity = cloneCart[index].quantity + 1;
+    }
+
+    //update cart cũ bằng cart mới
+    this.setState({ cart: cloneCart });
+  };
+
+  //   Xử lí xóa cart
+  handleDelete = (idShoe) => {
+    let cloneCart = this.state.cart.filter((item) => item.id !== idShoe);
+    this.setState({ cart: cloneCart });
+  };
+
+  // Xử lí tăng/ giảm
+  handleChangeQuantity = (idShoe, option) => {
+    let cloneCart = [...this.state.cart];
+    let index = cloneCart.findIndex((item) => item.id === idShoe);
+    cloneCart[index].quantity = cloneCart[index].quantity + option;
+    if (cloneCart[index].quantity == 0) {
+      cloneCart.splice(index, 1);
+    }
+    this.setState({ cart: cloneCart });
   };
 
   render() {
     return (
-      <div className="p-3">
+      <div className="p-2">
         <div className="bg-light p-3 rounded">
-          <ListShoe
-            list={this.state.shoeArr}
-            viewDetail={this.handleViewDetail}
-          />
+          <div className="row">
+            {/* render giỏ hàng */}
+            <Cart
+              cart={this.state.cart}
+              handleDelete={this.handleDelete}
+              handleChangeQuantity={this.handleChangeQuantity}
+            />
+            <ListShoe
+              list={this.state.shoeArr}
+              viewDetail={this.handleViewDetail}
+              handleAddToCart={this.handleAddToCart}
+            />
+          </div>
         </div>
         <br />
         <DetailShoe detail={this.state.detailShoe} />
-        {/* render giỏ hàng */}
-        <Cart cart={this.state.cart} />
       </div>
     );
   }
